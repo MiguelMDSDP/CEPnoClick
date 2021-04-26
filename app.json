@@ -1,0 +1,12 @@
+{
+  "name": "CEPnoClick",
+  "displayName": "CEPnoClick",
+  "expo": {
+    "name": "CEPnoClick",
+    "slug": "CEPnoClick",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
