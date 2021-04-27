@@ -1,3 +1,4 @@
+// ---------- IMPORTAÇÕES ----------
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -13,15 +14,19 @@ import {
 
 import titleImage from "./images/title.png";
 import backgroundImage from "./images/background.png";
+// ---------------------------------
 
 
 const App = () => {
+  // ---------- DECLARAÇÕES DOS ESTADOS ----------
   const [CEP, setCEP] = useState("");
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [address, setAddress] = useState(null);
   const [error, setError] = useState(null);
+  // ---------------------------------------------
 
+  // ---------- INCLUSÃO DA MÁSCARA NO INPUT ----------
   const handleCEPChange = (value) => {
     if (value.length > 5) {
       if (value.includes('-')) {
@@ -33,26 +38,35 @@ const App = () => {
       setCEP(value);
     }
   }
+  // --------------------------------------------------
 
+  // ---------- FUNÇÃO QUE É EXECUTADA QUANDO O BOTÃO ----------
+  // ----------- DE BUSCA É PRESSIONADO (REQUISIÇÃO) -----------
   const searchCEP = async () => {
     setLoading(true);
     await fetch(`https://viacep.com.br/ws/${CEP.slice(0, 5)}${CEP.slice(6, 9)}/json/`)
-      .then((response) => response.json())
-      .then((json) => {
+      .then((response) => response.json()) // Espera da resposta e decodificação
+      .then((json) => { // Espera da codificação para alteração dos estados
+      
+        // Se a resposta vier com um campo de erro,
+        // anuncia o erro para a aplicação
         if (json.erro) {
           setError("CEP não encontrado!");
           setAddress(null);
         } else {
+        // Se não existir erro, altera o estado
+        // que armazena o endereço
           setAddress(json);
           setError(null);
         }
       })
-      .catch((error) => {
+      .catch((error) => { // Tratamento de erro, caso a requisição seja feita de forma errada
         setAddress(null);
         setError("Erro interno do sistema!");
       });
     setLoading(false);
   }
+  // -----------------------------------------------------------
 
   const handleSearch = async () => {
     setModalVisible(true);
@@ -94,11 +108,13 @@ const App = () => {
             ) : (
               error ? (
                 <>
+                  {/* Mostra o erro, caso exista */}
                   <Text style={styles.title}>Erro!</Text>
                   <Text style={styles.text}>{error}</Text>
                 </>
               ) : address ? (
                 <>
+                  {/* Mostra os dados do endereço, proveniente da API ViaCEP */}
                   <Text style={styles.title}>Informações</Text>
                   <Text style={styles.text}>{`CEP: ${address.cep}`}</Text>
                   <Text style={styles.text}>{`Logradouro: ${address.logradouro || 'Não informado'}`}</Text>
@@ -126,6 +142,7 @@ const App = () => {
 }
 
 
+// ---------- Estilizações ----------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -238,6 +255,7 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+// ----------------------------------
 
 
-export default App;
+export default App; // Exportação do componente
